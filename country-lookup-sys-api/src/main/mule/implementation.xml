@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<flow name="implementation_scheduler" doc:id="dc6ace9c-1372-466b-9ac3-eb2fe6fe7c68" >
+		<scheduler doc:name="Scheduler - Get Country List from Country Code" doc:id="f11a8802-4b89-44fe-b807-6a48d55c320b" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10000" timeUnit="DAYS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<flow-ref doc:name="implementation-get-country-request" doc:id="c55cde86-b46f-4b31-a732-8adaf07c7c8f" name="implementation-get-country-request"/>
+		<os:store doc:id="7e452e2c-1ab4-4104-8ca3-b844462ab0fd" doc:name="Store - Countries Payload" key="#[p('os.countryPayloadKey')]" objectStore="globalObjectStore"/>
+	</flow>
+	<sub-flow name="implementation-get-country-request" doc:id="dd004dc5-e0c3-464f-b94b-33c667168ffa" >
+		<try doc:name="Try Request to First.org API" doc:id="fb8a4dfd-d508-4f11-a4db-1dbc321e5d06">
+			<http:request method="OPTIONS" doc:name="Request to First.org API " doc:id="f066cbf5-f3f3-442a-860c-260f9b5fe399" url="https://api.first.org/data/v1/countries?scope=iso">
+		</http:request>
+			</try>
+	</sub-flow>
+	<sub-flow name="implementation_get-country-name" doc:id="a32f839d-5c77-4d7a-b929-3332c8ca04cc" >
+		<logger level="INFO" doc:name="Start of transaction" doc:id="69527315-ad6a-459d-b979-499828796364" message="Start of Get Country Name transaction for transaction-id #[vars.transactionId]" />
+		<set-variable value="#[attributes.queryParams.countryIso]" doc:name="Country ISO Code" doc:id="65ed7acd-7e6a-4957-bd49-15108be7acea" variableName="countryIso"/>
+		<ee:cache doc:name="Cache" doc:id="37db8ecb-9401-465c-9a1d-9d68c5e33c48" cachingStrategy-ref="cachingStrategy">
+			<os:retrieve doc:name="Retrieve - Countries Payload" doc:id="a08e1d9c-e7e4-441b-9207-b3740ad095c7" key="#[p('os.countryPayloadKey')]" target="countriesPayloadVar" objectStore="globalObjectStore">
+			<os:default-value><![CDATA[[]]]></os:default-value>
+		</os:retrieve>
+			<choice doc:name="Check Countries payload exists in Object Store" doc:id="041ee3a2-eeda-4f2b-91f5-aa8bcab7a5f9">
+			<when expression="#[sizeOf(vars.countriesPayloadVar)&gt; 1]">
+				<logger level="INFO" doc:name="Countries data fetched from Object Store" doc:id="e2b7d973-f4ec-4a13-84dd-a30c57015ddf" />
+			</when>
+			<otherwise>
+				<flow-ref doc:name="implementation-get-country-request" doc:id="7633937d-135b-479e-b3a2-1c48009b2009" name="implementation-get-country-request" />
+				<os:store doc:name="Store - Countries Payload" doc:id="e6e9b910-159c-49c7-bcf7-43f8c538a88a" key="#[p('os.countryPayloadKey')]" objectStore="globalObjectStore" />
+			</otherwise>
+		</choice>
+			<ee:transform doc:name="Map Response" doc:id="d722f815-e4cb-4d08-a9eb-37d4bd9d52f1">
+			<ee:message>
+				<ee:set-payload resource="dwl/country-name-map-response.dwl" />
+			</ee:message>
+		</ee:transform>
+		</ee:cache>
+		<logger level="INFO" doc:name="End of transaction" doc:id="051061c8-b966-4966-ac9b-ec82049783f1" message="End of Get Country Name transaction for transaction-id #[vars.transactionId]" />
+	</sub-flow>
+</mule>

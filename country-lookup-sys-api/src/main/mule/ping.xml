@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="ping_get-health" doc:id="a277924d-fce7-4b1e-8bc8-a3aee99f8878" >
+		<set-variable value="#[attributes.queryParams.checkDependencies == 'true' default false]" doc:name="checkDependencies" doc:id="17d85d91-e710-4d0e-90ae-1221e83591d8" variableName="checkDependencies"/>
+		<choice doc:name="Choice for check dependencies" doc:id="0ecae038-03da-4339-9952-d48edeb7255d" >
+			<when expression="#[vars.checkDependencies]">
+				<flow-ref doc:name="ping_check-dependencies" doc:id="c481cefd-105b-4ce2-9d37-2c9afac6e617" name="ping_check-dependencies"/>
+			</when>
+			<otherwise >
+				<set-variable value="#[null]" doc:name="dependencyList" doc:id="8c7e0314-1b69-465a-a169-d4891023292b" variableName="dependencyList"/>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="httpStatus and Map Response" doc:id="25a980aa-ba70-481d-9fdb-50a11084e706" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	status: "OK",
+	apiName: p("api.name") default "",
+	apiVersion: p("api.version") default "",
+	(dependencies: vars.dependencyList map(item) -> {
+		name: item.name default "",
+		status: item.status default ""
+	})
+	if(vars.dependencyList != null)
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="httpStatus" ><![CDATA[200]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="ping_check-dependencies" doc:id="26efe636-3856-4a67-bac5-4461231a218f" >
+		<ee:transform doc:name="Map dependencies" doc:id="b2be7917-ca9c-4ef2-bb49-58dd5df86718" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>
