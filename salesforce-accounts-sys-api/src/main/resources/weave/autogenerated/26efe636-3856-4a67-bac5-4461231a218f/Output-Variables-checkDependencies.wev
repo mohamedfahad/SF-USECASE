@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_26efe636_3856_4a67_bac5_4461231a218f_Output_Variables_checkDependencies = Any
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	
+	<http:listener-config name="apiHttpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8081" />
+    </http:listener-config>
+    <apikit:config name="apikitRouterConfig" api="resource::e6a18b1c-f006-4f53-ba57-15cd17f13f7a:salesforce-accounts-system-api:1.0.0:raml:zip:salesforce-accounts-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	
+	
+	<salesforce:sfdc-config name="salesforceConfig" doc:name="Salesforce Config" doc:id="5547ca5e-053d-4f5a-b802-660185825c42" >
+		<salesforce:oauth-user-pass-connection consumerKey="${salesforce.consumerKey}" consumerSecret="${salesforce.consumerSecret}" username="${salesforce.username}" password="${salesforce.password}" securityToken="${salesforce.securityToken}" />
+	</salesforce:sfdc-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="b863cd6a-45ce-42d9-9dce-28907a8aa7cf" file="config/config-${env}.yaml" />
+	<global-property doc:name="Global Property" doc:id="88f5a7ef-453e-4f64-9693-088d9b61f7b1" name="env" value="local" />
+	
+	
+</mule>

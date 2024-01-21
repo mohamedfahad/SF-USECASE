@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	
+	<sub-flow name="implementation_get-account-by-id" doc:id="159de9a6-69cd-455c-8dda-48b97eba2425" >
+		<logger level="INFO" doc:name="Start of transaction" doc:id="6768c649-b6f3-49f1-bd46-9294d947353b" message="Start of Get Account By ID transaction for transaction-id #[vars.transactionId]"/>
+		<ee:transform doc:name="capture accountId" doc:id="5ee16a38-0d6c-497a-a079-4d41864b5f15" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl/capture-account-id-var.dwl" variableName="accountId" />
+			</ee:variables>
+		</ee:transform>
+		<try doc:name="Try Query Account" doc:id="3d8b6f0c-dc7c-4a99-a58d-976594cd1da6" >
+			<salesforce:query doc:id="530fdf1d-d3a8-45bd-aaf7-6028796ad168" doc:name="Query Account" config-ref="salesforceConfig">
+				<salesforce:salesforce-query ><![CDATA[${salesforce.accountQuery}]]></salesforce:salesforce-query>
+				<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	id: vars.accountId
+}]]]></salesforce:parameters>
+			</salesforce:query>
+		</try>
+		<choice doc:name="Account Not Found" doc:id="f31e113b-5369-422e-ad87-7f7a53bd148c" >
+			<when expression="#[sizeOf(payload) == 0]">
+				<ee:transform doc:name="Account Not Found Response" doc:id="c02a2a70-2d46-40bd-8fe6-fe17c144012a" >
+					<ee:message >
+						<ee:set-payload resource="dwl/account-not-found-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Parse Response" doc:id="9226716a-abbc-45f0-8261-ed86e55b3ebc" >
+					<ee:message >
+						<ee:set-payload resource="dwl/parse-query-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="End of transaction" doc:id="62b781d7-005c-4420-8aea-a7769188fe29" message="End of Get Account By ID transaction for transaction-id #[vars.transactionId]"/>
+	</sub-flow>
+	<sub-flow name="implementation_create-or-update-account" doc:id="fba1f9df-e7f7-4420-a784-c77adcb92723" >
+		<logger level="INFO" doc:name="Start of transaction" doc:id="07ad7bfc-a2ac-4152-8766-f967fc9f8463" message="Start of Create Account transaction for transaction-id #[vars.transactionId]" />
+		<ee:transform doc:name="capture accountId" doc:id="45392eb5-3334-4326-9ce8-fc5684a10e5b">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="accountId"><![CDATA[attributes.uriParams.'accountId']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Method Check" doc:id="f22aea48-0a23-4d74-8b6a-c351a96654d1" >
+			<when expression="#[attributes.method == 'PUT']">
+				<salesforce:query doc:name="Query Account" doc:id="88a6e0cc-adc6-42fd-a012-66271c869ea0" config-ref="salesforceConfig" target="count">
+					<salesforce:salesforce-query ><![CDATA[${salesforce.accountByIdCountQuery}]]></salesforce:salesforce-query>
+				</salesforce:query>
+				<choice doc:name="Account Not Found" doc:id="e62c3392-e638-492a-9da7-043fd66a1c97" >
+					<when expression="#[sizeOf(vars.count) == 0]" >
+						<ee:transform doc:name="Account Not Found Response" doc:id="2a12d501-c53c-43cd-86ad-a78cc9cea018" >
+							<ee:message >
+								<ee:set-payload resource="dwl/account-not-found-response.dwl" />
+							</ee:message>
+						</ee:transform>
+					</when>
+					<otherwise >
+						<ee:transform doc:name="Parse Input Data" doc:id="a9d7fce8-32e0-4994-8056-3276db1bb74c" >
+							<ee:message >
+								<ee:set-payload resource="dwl/parse-update-input-data.dwl" />
+							</ee:message>
+						</ee:transform>
+						<try doc:name="Try Update Account" doc:id="365309f3-bd9c-4503-9032-840abf9c7a99" >
+							<salesforce:update type="Account" doc:name="Update Account" doc:id="8505189d-2fd1-4721-9275-bb0de7aaa2d1" config-ref="salesforceConfig" />
+						</try>
+						<ee:transform doc:name="Parse Response" doc:id="71f79e54-caba-4caf-8590-845a656b6dbc" >
+							<ee:message >
+								<ee:set-payload resource="dwl/parse-update-response.dwl" />
+							</ee:message>
+						</ee:transform>
+					</otherwise>
+				</choice>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Parse Input Data" doc:id="f24f5e40-6ddd-4301-a7dd-1808ba266d91">
+					<ee:message>
+						<ee:set-payload resource="dwl/parse-create-input-data.dwl" />
+					</ee:message>
+				</ee:transform>
+				<try doc:name="Try Create Account" doc:id="dd4b3e31-eede-4f0c-bbaa-9ed907828a5f" >
+					<salesforce:upsert doc:name="Upsert" doc:id="50f3d8b5-7ea9-4aae-b1f8-ac5dc3e318d8" config-ref="salesforceConfig" objectType="Account" externalIdFieldName="External_ID__c"/>
+				</try>
+				<ee:transform doc:name="Parse Response" doc:id="340ad898-40bf-47b7-861b-977e3de5e281" >
+					<ee:message >
+						<ee:set-payload resource="dwl/parse-upsert-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="End of transaction" doc:id="2ececf3f-0461-4600-9e6e-a52e93666ba9" message="End of Create Account transaction for transaction-id #[vars.transactionId]" />
+	</sub-flow>
+	<sub-flow name="implementation_delete-account-by-Id" doc:id="cd26a566-628f-46f7-8c4a-f598c8df9252" >
+		<logger level="INFO" doc:name="Start of transaction" doc:id="37e10c8f-9708-4d04-ba05-0ff863ab5778" message="Start of Delete Account By ID transaction for transaction-id #[vars.transactionId]" />
+		<ee:transform doc:name="capture accountId" doc:id="66319e89-350c-40cc-8f7b-8631d25c2806">
+			<ee:variables>
+				<ee:set-variable variableName="accountId"><![CDATA[attributes.uriParams.'accountId']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<try doc:name="Try Delete Account" doc:id="a4b286ce-36d0-4143-88af-0ffcfef2a4bb" >
+			<salesforce:delete doc:name="Delete Account" doc:id="750ffb0a-4639-4291-bd88-9c5cd198aff2" config-ref="salesforceConfig" >
+				<salesforce:ids ><![CDATA[#[vars.accountId]]]></salesforce:ids>
+			</salesforce:delete>
+		</try>
+		<choice doc:name="Account Not Found" doc:id="74897e28-9469-4131-a9b0-8c33bdd107c2" >
+			<when expression="#[!(payload.items.successful)]">
+				<ee:transform doc:name="Account Not Found Response" doc:id="bfda6398-8788-4f6d-a985-484b75977ad6" >
+					<ee:message >
+						<ee:set-payload resource="dwl/account-not-found-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Parse Response" doc:id="79074095-87ef-41d2-802f-09aca4dc79e1" >
+					<ee:message >
+						<ee:set-payload resource="dwl/parse-delete-response.dwl" />
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="End of transaction" doc:id="73b29651-0ba7-45fa-9994-d029c770db74" message="End of Delete Account By ID transaction for transaction-id #[vars.transactionId]" />
+	</sub-flow>
+</mule>

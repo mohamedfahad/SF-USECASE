@@ -1,0 +1,10 @@
+https:
+  port: "8082"
+salesforce:
+  username: "fahadmm2009-gnc2@force.com"
+  password: "Mullath@1997"
+  consumerKey: "3MVG9fe4g9fhX0E64q3oapbDWFEmOxBRbDxDMgcCdF47dCnMF3jnancnlbeu7zT5E1iOeMx7e1SsNZNkaM8jY"
+  consumerSecret: "35904563B6DE0E0A96876FE9713F7C8CA816FF5B32F492D88B3249A8653D02BB"
+  securityToken: "aKebUwiccNmLl9NyhAEZrgv7E"
+  accountByIdQuery: "SELECT FIELDS(ALL) FROM Account"
+  accountByIdCountQuery: SELECT FIELDS(ALL) FROM Account WHERE id= :id"

@@ -1,0 +1,53 @@
+%dw 2.0
+
+type auto_159de9a6_69cd_455c_8dda_48b97eba2425_Output_Payload = {|
+  billingAddress?: {|
+    street: Null, 
+    city: Null, 
+    state: Null, 
+    postalCode: Null, 
+    country: Null
+  |}, 
+  email?: java_lang_Object | Null, 
+  errorCode?: String, 
+  errorMessage?: String, 
+  fax?: java_lang_Object_11 | Null, 
+  name?: java_lang_Object_14 | Null, 
+  number?: java_lang_Object_17 | Null, 
+  phone?: java_lang_Object_20 | Null, 
+  shippingAddress?: {|
+    street: Null, 
+    city: Null, 
+    state: Null, 
+    postalCode: Null, 
+    country: Null
+  |}, 
+  timeStamp?: DateTime, 
+  transactionId?: Null
+|}
+type java_lang_Object_17 = {|  |} {"typeAlias": "Object",
+"class": "java.lang.Object",
+"typeId": "java.lang.Object"}
+
+
+type java_lang_Object = {|  |} {"typeAlias": "Object",
+"class": "java.lang.Object",
+"typeId": "java.lang.Object"}
+
+
+type java_lang_Object_20 = {|  |} {"typeAlias": "Object",
+"class": "java.lang.Object",
+"typeId": "java.lang.Object"}
+
+
+type java_lang_Object_14 = {|  |} {"typeAlias": "Object",
+"class": "java.lang.Object",
+"typeId": "java.lang.Object"}
+
+
+type java_lang_Object_11 = {|  |} {"typeAlias": "Object",
+"class": "java.lang.Object",
+"typeId": "java.lang.Object"}
+
+
+
