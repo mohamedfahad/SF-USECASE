@@ -1,3 +1,5 @@
 countryRequest:
-  url: 
+  url: ""
   queryString: "scope=iso"
+os:
+  countryPayloadKey: ""
