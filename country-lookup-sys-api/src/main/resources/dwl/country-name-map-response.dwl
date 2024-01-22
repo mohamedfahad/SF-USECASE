@@ -1,11 +1,14 @@
 %dw 2.0
 output application/json
 ---
-if(sizeOf(vars.countriesPayloadVar)> 1)
+if(!isEmpty(vars.countriesPayloadVar))
 	{
-		countryName: vars.countriesPayloadVar.data."$(vars.countryIso)".country
+		billingCountryName: vars.countriesPayloadVar.data."$(vars.billingCountryIso)".country,
+		shippingCountryName: vars.countriesPayloadVar.data."$(vars.shippingCountryIso)".country
 	}
 else
-	{
-		countryName: payload.data."$(vars.countryIso)".country
+	{		
+		billingCountryName: payload.data."$(vars.billingCountryIso)".country,
+		shippingCountryName: payload.data."$(vars.shippingCountryIso)".country
+		
 	}

@@ -6,7 +6,7 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
-	<flow name="implementation_scheduler" doc:id="dc6ace9c-1372-466b-9ac3-eb2fe6fe7c68" >
+	<flow name="implementation_scheduler" doc:id="dc6ace9c-1372-466b-9ac3-eb2fe6fe7c68" initialState="started">
 		<scheduler doc:name="Scheduler - Get Country List from Country Code" doc:id="f11a8802-4b89-44fe-b807-6a48d55c320b" >
 			<scheduling-strategy >
 				<fixed-frequency frequency="10000" timeUnit="DAYS"/>
@@ -23,13 +23,26 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 	</sub-flow>
 	<sub-flow name="implementation_get-country-name" doc:id="a32f839d-5c77-4d7a-b929-3332c8ca04cc" >
 		<logger level="INFO" doc:name="Start of transaction" doc:id="69527315-ad6a-459d-b979-499828796364" message="Start of Get Country Name transaction for transaction-id #[vars.transactionId]" />
-		<set-variable value="#[attributes.queryParams.countryIso]" doc:name="Country ISO Code" doc:id="65ed7acd-7e6a-4957-bd49-15108be7acea" variableName="countryIso"/>
+		<ee:transform doc:name="country ISO vars" doc:id="69f4e991-4d14-4849-ae2e-f537ae5bb6e1" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="billingCountryIso" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.queryParams.billingcountryiso]]></ee:set-variable>
+				<ee:set-variable variableName="shippingCountryIso" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.queryParams.shippingcountryiso]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
 		<ee:cache doc:name="Cache" doc:id="37db8ecb-9401-465c-9a1d-9d68c5e33c48" cachingStrategy-ref="cachingStrategy">
 			<os:retrieve doc:name="Retrieve - Countries Payload" doc:id="a08e1d9c-e7e4-441b-9207-b3740ad095c7" key="#[p('os.countryPayloadKey')]" target="countriesPayloadVar" objectStore="globalObjectStore">
-			<os:default-value><![CDATA[[]]]></os:default-value>
+			<os:default-value><![CDATA[#[[]]]]></os:default-value>
 		</os:retrieve>
 			<choice doc:name="Check Countries payload exists in Object Store" doc:id="041ee3a2-eeda-4f2b-91f5-aa8bcab7a5f9">
-			<when expression="#[sizeOf(vars.countriesPayloadVar)&gt; 1]">
+			<when expression="#[!isEmpty(vars.countriesPayloadVar)]">
 				<logger level="INFO" doc:name="Countries data fetched from Object Store" doc:id="e2b7d973-f4ec-4a13-84dd-a30c57015ddf" />
 			</when>
 			<otherwise>

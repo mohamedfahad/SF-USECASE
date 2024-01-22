@@ -14,13 +14,13 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 	 <http:listener-config name="apiHttpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="${https.port}" protocol="HTTPS" tlsContext="tlsContext"/>
     </http:listener-config>
-    <apikit:config name="apikitRouterConfig" api="resource::e6a18b1c-f006-4f53-ba57-15cd17f13f7a:first-country-lookup-system-api:1.0.2:raml:zip:first-country-lookup-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="first-country-lookup-system-api-config" api="resource::e6a18b1c-f006-4f53-ba57-15cd17f13f7a:first-country-lookup-system-api:1.0.3:raml:zip:first-country-lookup-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 	<configuration-properties doc:name="Configuration properties" doc:id="19f2e044-0604-4c8e-b8f3-b8f917522c01" file="config/config-${env}.yaml" />
 	<global-property doc:name="Global Property" doc:id="0801801d-3408-4427-a617-a1bf6d8a6a44" name="env" value="local" />
 	<tls:context name="tlsContext" doc:name="TLS Context" doc:id="b5519264-0d6e-431c-b384-e9dcb38fca07" >
 		<tls:key-store type="pkcs12" path="certs/country-lookup-sapi.p12" alias="server" keyPassword="mule12345" password="mule12345" />
 	</tls:context>
-	<ee:object-store-caching-strategy name="cachingStrategy" doc:name="Caching Strategy" doc:id="4393a459-1086-4368-928f-fe8d31e4aee7" keyGenerationExpression="#[vars.countryIso]" objectStore="globalObjectStore"/>
+	<ee:object-store-caching-strategy name="cachingStrategy" doc:name="Caching Strategy" doc:id="4393a459-1086-4368-928f-fe8d31e4aee7" keyGenerationExpression="#[vars.shippingcountryiso ++ vars.billingcountryiso]" objectStore="globalObjectStore"/>
 	<os:object-store name="globalObjectStore" doc:name="Object store" doc:id="019e39e0-72d8-4946-8723-63b3c122f7a6" />
 	
 	
