@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd">
+		
+	<error-handler name="error-handler_common"
+		doc:id="88213026-8531-4413-b014-effdbad03b39">
+
+		<on-error-propagate type="APIKIT:BAD_REQUEST"
+			doc:name="propagate BAD REQUEST error">
+			<flow-ref doc:name="common-error-handler_log"
+				doc:id="dbcdb363-c0a8-499e-9f74-a3cb6f4ed8b0"
+				name="common-error-handler_log" />
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:id="9ae902c7-2abe-4087-a539-2ce4a5de77d4"
+				doc:name="build error msg">
+				<ee:message>
+					<ee:set-payload resource="dwl/common-bad-request-error.dwl" />
+				
+</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<async doc:name="send msg async"
+				doc:id="38cfb881-45a0-44ae-b3a0-dc6af746f1e6">
+				<flow-ref
+					doc:name="common-error-handler_send-all"
+					doc:id="7e99f7b8-9c3c-4576-b7ca-2b328a539d3f"
+					name="common-error-handler_send-all" />
+			</async>
+		
+</on-error-propagate>
+		<on-error-propagate type="APIKIT:NOT_FOUND"
+			doc:name="propagate NOT FOUND error">
+			<flow-ref doc:name="common-error-handler_log"
+				doc:id="2864b56f-8295-4708-bcd9-91a4bac463bd"
+				name="common-error-handler_log" />
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:id="f981ff6a-d38d-4eb8-8d4a-73740094fc97"
+				doc:name="build error msg">
+				<ee:message>
+					<ee:set-payload resource="dwl/common-not-found-error.dwl" />
+				
+</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<async doc:name="send msg async"
+				doc:id="00cae76a-ece0-46b8-afb0-4961427caa81" maxConcurrency="1">
+				<flow-ref
+					doc:name="common-error-handler_send-all"
+					doc:id="9d3c4123-587c-4bfb-a37d-7efbab424091"
+					name="common-error-handler_send-all" />
+			</async>
+		</on-error-propagate>
+		<on-error-propagate
+			type="APIKIT:METHOD_NOT_ALLOWED"
+			doc:name="propagate METHOD NOT ALLOWED error">
+			<flow-ref doc:name="common-error-handler_log"
+				doc:id="0ec60e92-3d6e-4110-9fe3-1443ee75dea2"
+				name="common-error-handler_log" />
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:id="b376df4e-c92a-47af-be8f-7b5431dd9962"
+				doc:name="build error msg">
+				<ee:message>
+					<ee:set-payload resource="dwl/common-method-not-allowed-error.dwl" />
+				
+</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<async doc:name="send msg async"
+				doc:id="5bfb64d3-18cd-4268-be28-1f0b596a7bf8">
+				<flow-ref
+					doc:name="common-error-handler_send-all"
+					doc:id="5032d7ee-1c84-41cc-903e-584d61591e12"
+					name="common-error-handler_send-all" />
+			</async>
+		</on-error-propagate>
+		<on-error-propagate type="APIKIT:NOT_ACCEPTABLE"
+			doc:name="propagate NOT ACCEPTABLE">
+			<flow-ref doc:name="common-error-handler_log"
+				doc:id="b97c6241-b0d9-4e35-bd7f-3218ed6c17c8"
+				name="common-error-handler_log" />
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:id="6be1c23d-804b-47cf-a53d-2721eb623ee2"
+				doc:name="build error msg">
+				<ee:message>
+					<ee:set-payload resource="dwl/common-not-acceptable-error.dwl" />
+				
+</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<async doc:name="send msg async"
+				doc:id="8516bd0c-d509-462c-ac42-6220325b7c8a">
+				<flow-ref
+					doc:name="common-error-handler_send-all"
+					doc:id="0ac55aaf-87b2-4205-8998-2f27d4b6022d"
+					name="common-error-handler_send-all" />
+			</async>
+		</on-error-propagate>
+		<on-error-propagate
+			type="APIKIT:UNSUPPORTED_MEDIA_TYPE"
+			doc:name="propagate UNSUPPORTED MEDIA TYPE">
+			<flow-ref doc:name="common-error-handler_log"
+				doc:id="a1d87b52-1cee-4b69-87b1-f217a7b1cfe4"
+				name="common-error-handler_log" />
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:id="cce03d18-4cbf-461a-8ab3-cf0abeef8860" doc:name="build error msg">
+				<ee:message>
+					<ee:set-payload resource="dwl/common-unsuspported-error.dwl" />
+				
+</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<async doc:name="send msg async"
+				doc:id="ed7cf7ff-a30a-4940-b45a-6f180a625d95">
+				<flow-ref
+					doc:name="common-error-handler_send-all"
+					doc:id="19906ef1-4145-43d3-9e02-2c7d0fdd9502"
+					name="common-error-handler_send-all" />
+			</async>
+		</on-error-propagate>
+		<on-error-propagate type="APIKIT:NOT_IMPLEMENTED"
+			doc:name="propagate NOT IMPLEMENTED">
+			<flow-ref doc:name="common-error-handler_log"
+				doc:id="b7180a18-3147-49e9-a552-64375530f277"
+				name="common-error-handler_log" />
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:id="a6b2aaa3-fe63-49dd-bc2b-5215088566c1"
+				doc:name="build error msg">
+				<ee:message>
+					<ee:set-payload resource="dwl/common-server-error.dwl" />
+				
+</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<async doc:name="send msg async"
+				doc:id="07bf903e-ebc9-4541-8681-ccf0068f6442">
+				<flow-ref
+					doc:name="common-error-handler_send-all"
+					doc:id="8c543be5-22ac-4550-9950-b4392e102075"
+					name="common-error-handler_send-all" />
+			</async>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="propagate ANY other error"
+			doc:id="1e2769b9-d1a9-4bdc-aaba-13cd7ab5557d" type="ANY">
+			<flow-ref doc:name="common-error-handler_log"
+				doc:id="ac3eb3ef-934a-4f48-a138-8e374ef22c68"
+				name="common-error-handler_log" />
+			<ee:transform doc:name="build error msg"
+				doc:id="3bfee7e4-4e03-4f0f-b43c-30f3644a94ea">
+				<ee:message>
+					<ee:set-payload resource="dwl/common-unknown-error.dwl" />
+
+				
+</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[(vars.httpStatus default error.muleMessage.attributes.statusCode) default 500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<set-variable value="#[payload]" doc:name="Set Exception Payload Var" doc:id="a2269d31-89ee-4f64-8ece-e56c4b53f948" variableName="exceptionResponse" />
+			<async doc:name="send msg async"
+				doc:id="d30448c0-0af7-43f4-9646-7d6670921d79" maxConcurrency="1">
+				<flow-ref
+					doc:name="common-error-handler_send-all"
+					doc:id="d0d93faf-4920-4c38-a0dd-ded95fe1f923"
+					name="common-error-handler_send-all" />
+			</async>
+		</on-error-propagate>
+	</error-handler>
+</mule>

@@ -2,7 +2,7 @@
 output application/json
 ---
 {
-  id: payload.id,
-  status: 0,
+  id: vars.accountId,
+  status: 1,
   message: "Account deleted successfully"
 }

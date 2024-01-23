@@ -1,0 +1,27 @@
+%dw 2.0
+
+type auto_f7ca22bd_569a_4cb2_a912_374c615e004c_Input_Payload = {
+  number?: String, 
+  phone?: String, 
+  name: String, 
+  shippingAddress?: {
+    country?: String | Null, 
+    city?: String | Null, 
+    street?: String | Null, 
+    postalCode?: String | Null, 
+    state?: String | Null, 
+    _?: Any
+  } {"description": "Shipping Account address"}, 
+  billingAddress?: {
+    country?: String | Null, 
+    city?: String | Null, 
+    street?: String | Null, 
+    postalCode?: String | Null, 
+    state?: String | Null, 
+    _?: Any
+  } {"description": "Billing Account address"}, 
+  fax?: String, 
+  email: String, 
+  _?: Any
+}
+

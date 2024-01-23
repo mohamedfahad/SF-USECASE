@@ -15,16 +15,19 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 				<ee:set-variable resource="dwl/capture-account-id-var.dwl" variableName="accountId" />
 			</ee:variables>
 		</ee:transform>
-		<try doc:name="Try Query Account" doc:id="3d8b6f0c-dc7c-4a99-a58d-976594cd1da6" >
+		<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Query Account" doc:id="50eed401-c522-43a5-a511-abc1f938bc08" millisBetweenRetries="#[p('timeBetweenRetries')]">
+			<try doc:name="Try Query Account" doc:id="3d8b6f0c-dc7c-4a99-a58d-976594cd1da6">
 			<salesforce:query doc:id="530fdf1d-d3a8-45bd-aaf7-6028796ad168" doc:name="Query Account" config-ref="salesforceConfig">
-				<salesforce:salesforce-query ><![CDATA[${salesforce.accountQuery}]]></salesforce:salesforce-query>
-				<salesforce:parameters ><![CDATA[#[output application/java
+				<salesforce:salesforce-query><![CDATA[${salesforce.accountQuery}]]></salesforce:salesforce-query>
+				<salesforce:parameters><![CDATA[#[output application/json
 ---
 {
-	id: vars.accountId
+	id: "'" ++ vars.accountId as String ++ "'"
 }]]]></salesforce:parameters>
 			</salesforce:query>
+			<error-handler ref="implementation-error-handler" />
 		</try>
+			</until-successful>
 		<choice doc:name="Account Not Found" doc:id="f31e113b-5369-422e-ad87-7f7a53bd148c" >
 			<when expression="#[sizeOf(payload) == 0]">
 				<ee:transform doc:name="Account Not Found Response" doc:id="c02a2a70-2d46-40bd-8fe6-fe17c144012a" >
@@ -53,9 +56,19 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 		</ee:transform>
 		<choice doc:name="Method Check" doc:id="f22aea48-0a23-4d74-8b6a-c351a96654d1" >
 			<when expression="#[attributes.method == 'PUT']">
-				<salesforce:query doc:name="Query Account" doc:id="88a6e0cc-adc6-42fd-a012-66271c869ea0" config-ref="salesforceConfig" target="count">
-					<salesforce:salesforce-query ><![CDATA[${salesforce.accountByIdCountQuery}]]></salesforce:salesforce-query>
+				<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Query Account" doc:id="28a8c492-a7c7-493e-ad7f-95000c8c8813" millisBetweenRetries="#[p('timeBetweenRetries')]">
+					<try doc:name="Try" doc:id="e26faeb3-5178-42ef-920f-704df690e4a1">
+					<salesforce:query doc:name="Query Account" doc:id="88a6e0cc-adc6-42fd-a012-66271c869ea0" config-ref="salesforceConfig" target="count">
+					<salesforce:salesforce-query><![CDATA[${salesforce.accountCountQuery}]]></salesforce:salesforce-query>
+						<salesforce:parameters><![CDATA[#[output application/json
+---
+{
+	id: "'" ++ vars.accountId as String ++ "'"
+}]]]></salesforce:parameters>
 				</salesforce:query>
+					<error-handler ref="implementation-error-handler" />
+				</try>
+					</until-successful>
 				<choice doc:name="Account Not Found" doc:id="e62c3392-e638-492a-9da7-043fd66a1c97" >
 					<when expression="#[sizeOf(vars.count) == 0]" >
 						<ee:transform doc:name="Account Not Found Response" doc:id="2a12d501-c53c-43cd-86ad-a78cc9cea018" >
@@ -65,15 +78,18 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 						</ee:transform>
 					</when>
 					<otherwise >
-						<ee:transform doc:name="Parse Input Data" doc:id="a9d7fce8-32e0-4994-8056-3276db1bb74c" >
+						<ee:transform doc:name="Parse Update Input Data" doc:id="a9d7fce8-32e0-4994-8056-3276db1bb74c" >
 							<ee:message >
 								<ee:set-payload resource="dwl/parse-update-input-data.dwl" />
 							</ee:message>
 						</ee:transform>
-						<try doc:name="Try Update Account" doc:id="365309f3-bd9c-4503-9032-840abf9c7a99" >
+						<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Update Account" doc:id="c1d2d0e6-b81c-43c5-9e53-4879e31cef3d" millisBetweenRetries="#[p('timeBetweenRetries')]">
+							<try doc:name="Try Update Account" doc:id="365309f3-bd9c-4503-9032-840abf9c7a99">
 							<salesforce:update type="Account" doc:name="Update Account" doc:id="8505189d-2fd1-4721-9275-bb0de7aaa2d1" config-ref="salesforceConfig" />
+							<error-handler ref="implementation-error-handler" />
 						</try>
-						<ee:transform doc:name="Parse Response" doc:id="71f79e54-caba-4caf-8590-845a656b6dbc" >
+							</until-successful>
+						<ee:transform doc:name="Parse Update Response" doc:id="71f79e54-caba-4caf-8590-845a656b6dbc" >
 							<ee:message >
 								<ee:set-payload resource="dwl/parse-update-response.dwl" />
 							</ee:message>
@@ -82,15 +98,18 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 				</choice>
 			</when>
 			<otherwise >
-				<ee:transform doc:name="Parse Input Data" doc:id="f24f5e40-6ddd-4301-a7dd-1808ba266d91">
+				<ee:transform doc:name="Parse Create Input Data" doc:id="f24f5e40-6ddd-4301-a7dd-1808ba266d91">
 					<ee:message>
 						<ee:set-payload resource="dwl/parse-create-input-data.dwl" />
 					</ee:message>
 				</ee:transform>
-				<try doc:name="Try Create Account" doc:id="dd4b3e31-eede-4f0c-bbaa-9ed907828a5f" >
-					<salesforce:upsert doc:name="Upsert" doc:id="50f3d8b5-7ea9-4aae-b1f8-ac5dc3e318d8" config-ref="salesforceConfig" objectType="Account" externalIdFieldName="External_ID__c"/>
+				<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Upsert Account" doc:id="a43f7aeb-b03d-439b-8a34-56e8bb7862cb" millisBetweenRetries="#[p('timeBetweenRetries')]">
+						<try doc:name="Try Create Account" doc:id="dd4b3e31-eede-4f0c-bbaa-9ed907828a5f">
+					<salesforce:create type="Account" doc:name="Create - Account" doc:id="8eec922e-bd7b-42cf-bd5e-cbc2703f8818" config-ref="salesforceConfig"/>
+						<error-handler ref="implementation-error-handler" />
 				</try>
-				<ee:transform doc:name="Parse Response" doc:id="340ad898-40bf-47b7-861b-977e3de5e281" >
+					</until-successful>
+				<ee:transform doc:name="Parse Create Response" doc:id="340ad898-40bf-47b7-861b-977e3de5e281" >
 					<ee:message >
 						<ee:set-payload resource="dwl/parse-upsert-response.dwl" />
 					</ee:message>
@@ -106,22 +125,38 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 				<ee:set-variable variableName="accountId"><![CDATA[attributes.uriParams.'accountId']]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<try doc:name="Try Delete Account" doc:id="a4b286ce-36d0-4143-88af-0ffcfef2a4bb" >
-			<salesforce:delete doc:name="Delete Account" doc:id="750ffb0a-4639-4291-bd88-9c5cd198aff2" config-ref="salesforceConfig" >
-				<salesforce:ids ><![CDATA[#[vars.accountId]]]></salesforce:ids>
-			</salesforce:delete>
+		<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Query Account" doc:id="f7cac80b-3468-47c7-bb3a-25339cdb7545" millisBetweenRetries="#[p('timeBetweenRetries')]">
+			<try doc:name="Try" doc:id="d1b647c0-75a7-4582-b7ac-eba9cbb9adec">
+			<salesforce:query doc:name="Query Account" doc:id="583a2cf3-876f-41ad-aecc-bbd3e22020ab" config-ref="salesforceConfig" target="count">
+				<salesforce:salesforce-query><![CDATA[${salesforce.accountCountQuery}]]></salesforce:salesforce-query>
+				<salesforce:parameters><![CDATA[#[output application/json
+---
+{
+	id: "'" ++ vars.accountId as String ++ "'"
+}]]]></salesforce:parameters>
+			</salesforce:query>
+			<error-handler ref="implementation-error-handler" />
 		</try>
-		<choice doc:name="Account Not Found" doc:id="74897e28-9469-4131-a9b0-8c33bdd107c2" >
-			<when expression="#[!(payload.items.successful)]">
-				<ee:transform doc:name="Account Not Found Response" doc:id="bfda6398-8788-4f6d-a985-484b75977ad6" >
-					<ee:message >
+			</until-successful>
+		<choice doc:name="Account Not Found" doc:id="79ecad67-9cf7-4d1c-abf0-b5fd9553497e">
+			<when expression="#[sizeOf(vars.count) == 0]">
+				<ee:transform doc:name="Account Not Found Response" doc:id="42b35787-a3a7-43bc-86cf-260cdc17c896">
+					<ee:message>
 						<ee:set-payload resource="dwl/account-not-found-response.dwl" />
 					</ee:message>
 				</ee:transform>
 			</when>
-			<otherwise >
-				<ee:transform doc:name="Parse Response" doc:id="79074095-87ef-41d2-802f-09aca4dc79e1" >
-					<ee:message >
+			<otherwise>
+				<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Delete Account" doc:id="1010ce20-10a6-49a4-9a05-c82e63ef8232" millisBetweenRetries="#[p('timeBetweenRetries')]">
+					<try doc:name="Try Delete Account" doc:id="a4b286ce-36d0-4143-88af-0ffcfef2a4bb">
+					<salesforce:delete doc:name="Delete Account" doc:id="750ffb0a-4639-4291-bd88-9c5cd198aff2" config-ref="salesforceConfig">
+				<salesforce:ids><![CDATA[#[[vars.accountId]]]]></salesforce:ids>
+			</salesforce:delete>
+					<error-handler ref="implementation-error-handler" />
+		</try>
+					</until-successful>
+				<ee:transform doc:name="Parse Response" doc:id="79074095-87ef-41d2-802f-09aca4dc79e1">
+					<ee:message>
 						<ee:set-payload resource="dwl/parse-delete-response.dwl" />
 					</ee:message>
 				</ee:transform>

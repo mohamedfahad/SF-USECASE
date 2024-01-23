@@ -1,0 +1,17 @@
+api:
+  name: "salesforce-accounts-sys-api"
+  version: "1.0.0"
+keystore:
+  path: "certs/country-lookup-sapi.p12"
+  alias: "server"
+maxRetries: "3"
+timeBetweenRetries: "1000"
+common:  
+  notifications:
+    send: "none"
+    email:      
+      from-address: "noreply@invalid.com"      
+      to-address: "nodest@invalid.com"
+    sms:      
+      from-number: "18005551234"      
+      to-number: "18005551234"

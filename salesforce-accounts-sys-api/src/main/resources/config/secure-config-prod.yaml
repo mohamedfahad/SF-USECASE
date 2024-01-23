@@ -1,0 +1,7 @@
+salesforce:
+  password: ""  
+  consumerSecret: ""
+  securityToken: ""
+keystore:
+  keyPassword: "]"
+  password: ""

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="implementation_create-account" doc:id="3ec5c687-9ef9-4f55-87ce-ad5bb0081d9d" >
+		<logger level="INFO" doc:name="START" doc:id="46f49534-b814-45f3-bd28-4f7f77aea175" message="Start of Retrieve Account Flow"/>
+		<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Create Account" doc:id="369ea2e5-7d68-4c30-91f7-4abae296613e" millisBetweenRetries="#[p('timeBetweenRetries')]">
+			<try doc:name="Try - Create Account" doc:id="b5f77160-77ce-4b75-a121-6cf640f6b1a9">
+			<http:request method="POST" doc:name="POST Request to SF Accounts Process API" doc:id="02887cdb-beda-4001-905c-d71006fc2e8b" config-ref="sfAccountsPrcApiRequestConfig" path="${}"/>
+				<error-handler ref="implementation-error-handler" />
+		</try>
+		</until-successful>
+		<logger level="INFO" doc:name="END" doc:id="28bf76c0-c18e-4f28-bba3-91da66e7b335" message="End of Retrieve Account Flow"/>
+	</sub-flow>
+	<sub-flow name="implementation_update-account" doc:id="f7ca22bd-569a-4cb2-a912-374c615e004c" >
+		<logger level="INFO" doc:name="START" doc:id="df3a031b-94aa-4c43-ad9b-c512e69b5ee6" message="Start of Update Account Flow"/>
+		<until-successful maxRetries="5" doc:name="Until Successful - Update Account" doc:id="fb8be128-8e45-4f5c-96c8-18835a044b4f" >
+			<try doc:name="Try - Update Account" doc:id="be6b2460-cfdb-4691-b0ff-504ec0690b68">
+			<http:request method="PUT" doc:name="PUT Request to SF Accounts Sys API" doc:id="81d9bb67-480d-490f-b364-46283f8c6026" config-ref="sfAccountsSysApiRequestConfig" path="${sf-accounts-sys-api.path}">
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"accountId" : attributes.uriParams.accountId
+}]]]></http:uri-params>
+				</http:request>
+				<error-handler ref="implementation-error-handler" />
+		</try>
+		</until-successful>
+		<logger level="INFO" doc:name="END" doc:id="eea1ca6a-9a33-4347-8011-9df0cdb3b360" message="End of Update Account Flow"/>
+	</sub-flow>
+	<sub-flow name="implementation_delete-account" doc:id="94a55014-34b7-4227-9e87-d1a1160d414b" >
+		<logger level="INFO" doc:name="START" doc:id="28c3b134-987d-4c3b-9d84-cb762a8df371" message="Start of Delete Account Flow"/>
+		<until-successful maxRetries="5" doc:name="Until Successful - Delete Account" doc:id="23a35995-818a-4ab1-b705-95d6285e828d" >
+			<try doc:name="Try - Delete Account" doc:id="f6be081a-6a9d-4249-ab0b-c197972a0ed0">
+			<http:request method="DELETE" doc:name="Delete Request to SF Accounts Sys API" doc:id="cba92a72-b85b-4204-9313-1cc9737b90de" config-ref="sfAccountsSysApiRequestConfig" path="${sf-accounts-sys-api.path}">
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"accountId" : attributes.uriParams.accountId
+}]]]></http:uri-params>
+				</http:request>
+				<error-handler ref="implementation-error-handler" />
+		</try>
+		</until-successful>
+		<logger level="INFO" doc:name="END" doc:id="86b3a441-b657-436e-8457-e884ba6157bd" message="End of Delete Account Flow"/>
+	</sub-flow>
+	<sub-flow name="implementation_retrieve-account" doc:id="7cdcdff6-94ff-4396-808b-9dda3d4946ca" >
+		<logger level="INFO" doc:name="START" doc:id="af190c5a-833a-4c9d-880a-041398961618" message="Start of Retrieve Account Flow"/>
+		<until-successful maxRetries="5" doc:name="Until Successful - Retrieve Account" doc:id="26f1fe54-9ae2-41a9-9681-4756d4408b4a" >
+			<try doc:name="Try - Retrieve Account" doc:id="2d86ef00-c5c1-40a3-b04a-c1397d9f6a9a">
+			<http:request method="GET" doc:name="GET Request to SF Accounts Sys API" doc:id="7e2a9a23-d931-461d-ab12-7468d0b657e0" config-ref="sfAccountsSysApiRequestConfig" path="${sf-accounts-sys-api.path}">
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"accountId" : attributes.uriParams.accountId
+}]]]></http:uri-params>
+				</http:request>
+				<error-handler ref="implementation-error-handler" />
+		</try>
+		</until-successful>
+		<logger level="INFO" doc:name="END" doc:id="a78b8a1e-9a1c-4695-9652-65d6c75a40c4" message="End of Retrieve Account Flow"/>
+	</sub-flow>
+</mule>

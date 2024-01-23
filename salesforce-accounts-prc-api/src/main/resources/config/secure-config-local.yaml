@@ -1,0 +1,8 @@
+sf-accounts-sys-api: 
+  client-secret: ""
+country-lookup-sys-api:
+  client-secret: ""
+keystore:
+  keyPassword: "![AyKFohxnUnaYiMkC6qtH/A==]"
+  password: "![AyKFohxnUnaYiMkC6qtH/A==]"
+  

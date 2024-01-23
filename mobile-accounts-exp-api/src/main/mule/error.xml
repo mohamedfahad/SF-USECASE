@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="implementation-error-handler" doc:id="77e64838-0f3c-43dd-949a-76edf31ee4c3">
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate - Query Account Failed" doc:id="f9af1453-d679-4cdb-aa45-d5ef635934dd" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:CLIENT_SECURITY, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE">
+					<set-variable value="#[error.errorMessage.attributes.statusCode]" doc:name="httpStatus" doc:id="6cd47542-54c5-4c65-a054-942eac39cc7c" variableName="httpStatus"/>
+					<flow-ref doc:name="common-error-handler_http-exception" doc:id="362ab8a4-a7d1-4a8a-a8e6-45183904d467" name="common-error-handler_http-exception"/>
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="ping-error-handler" doc:id="90b67a16-0d9f-4a2b-835c-053dd9ce47ae">
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e742a9b4-46d2-4c91-84d1-4a9724269e4d" type="HTTP:METHOD_NOT_ALLOWED">
+                    <set-variable value="#['UP']" doc:name="backendSystemStatus" doc:id="ef635715-8c9b-4d34-9e00-3d1007dc5333" variableName="backendSystemStatus" />
+                </on-error-continue>
+                <on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="3dd1c6f5-ef9f-4ee6-ad2f-8f3a86a78347" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY">
+                    <set-variable value="#['DOWN']" doc:name="backendSystemStatus" doc:id="d9458ec4-b74f-4d01-9038-68d08a588406" variableName="backendSystemStatus" />
+                </on-error-continue>
+                <on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="25662785-3d41-43d5-816f-266d6e96779c" type="ANY">
+                    <set-variable value="#['ERROR']" doc:name="backendSystemStatus" doc:id="b67a8399-d7f1-47f0-902c-32befcce5acb" variableName="backendSystemStatus" />
+                </on-error-continue>
+	</error-handler>
+</mule>

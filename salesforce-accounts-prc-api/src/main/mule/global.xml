@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd 
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	
+	<http:listener-config name="apiHttpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="${https.port}" protocol="HTTPS" tlsContext="tlsContext"/>
+    </http:listener-config>
+    <apikit:config name="salesforce-accounts-process-api-config" api="resource::e6a18b1c-f006-4f53-ba57-15cd17f13f7a:salesforce-accounts-process-api:1.0.0:raml:zip:salesforce-accounts-process-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<vm:config name="vmConfig" doc:name="VM Config" doc:id="a351331e-c0c1-4727-bcc3-2d9a1ea44dd3" >
+		<vm:queues >
+			<vm:queue queueName="SMS" />
+			<vm:queue queueName="EMAIL" />
+		</vm:queues>
+	</vm:config>
+	<http:request-config name="countryLookupRequestConfig" doc:name="HTTP Request configuration" doc:id="80fb6881-9fbc-478f-8551-3ecc06ff6de2" >
+		<http:request-connection host="${country-lookup-sys-api.host}" port="${country-lookup-sys-api.port}" protocol="HTTPS"/>
+	</http:request-config>
+	<http:request-config name="sfAccountsRequestConfig" doc:name="HTTP Request configuration" doc:id="91d7101d-cf6c-49f0-a782-49d233036c70" >
+		<http:request-connection host="${sf-accounts-sys-api.host}" port="${sf-accounts-sys-api.port}" protocol="HTTPS"/>
+	</http:request-config>
+	<tls:context name="tlsContext" doc:name="TLS Context" doc:id="7b38ec7b-63a4-4432-a5f8-d2034547f66a" >
+		<tls:key-store type="pkcs12" path="${keystore.path}" alias="${keystore.alias}" keyPassword="${secure::keystore.keyPassword}" password="${secure::keystore.password}" />
+	</tls:context>
+	<configuration-properties doc:name="Configuration properties" doc:id="704c642c-9e06-4b66-bf0a-28e453c14049" file="config\common.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="456c9b65-e45d-4c10-bd6b-61e888710fde" file="config\config-${env}.yaml" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="54b14990-d91e-47bb-b67b-1c83022b90cf" file="config\secure-config-${env}.yaml" key="${encryptKey}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<configuration doc:name="Configuration" doc:id="b0d24246-df68-4fa6-9554-920c80bcceca" defaultErrorHandler-ref="error-handler_common" />
+	<global-property doc:name="Global Property" doc:id="91636568-623f-415e-a483-66bee0420341" name="env" value="local" />
+	<global-property doc:name="Global Property" doc:id="4c045571-2190-4d5a-930f-fb4aef1cc29c" name="encryptKey" value="sfusecase" />
+</mule>

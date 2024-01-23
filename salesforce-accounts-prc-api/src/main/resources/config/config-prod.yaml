@@ -1,0 +1,15 @@
+https:
+  port: "8082"
+sf-accounts-sys-api:
+  client-id: ""
+  client-secret: ""
+  host: ""
+  port: ""
+country-lookup-sys-api:
+  client-id: ""
+  client-secret: ""
+  host: ""
+  port: ""
+keystore:
+  path: "certs/country-lookup-sapi"
+  alias: "server"

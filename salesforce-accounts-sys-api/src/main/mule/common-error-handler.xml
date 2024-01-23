@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:notifications-prc-api="http://www.mulesoft.org/schema/mule/notifications-prc-api"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/notifications-prc-api http://www.mulesoft.org/schema/mule/notifications-prc-api/current/mule-notifications-prc-api.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<sub-flow name="common-error-handler_log"
+		doc:id="2f583c92-4d21-441d-bc45-41a8ccfc9336">
+		<logger level="INFO" doc:name="log error" doc:id="2e8c2d70-7011-4e8d-a9a9-69e2dc01812d" message='#[%dw 2.0
+output application/json ---
+{
+ 	attributes: attributes,
+ 	error:
+		errorType: error.errorType default "",
+		description: error.description default "",
+		detailedDescription: error.detailedDescription default "",
+}]' />
+	</sub-flow>
+	
+	<sub-flow name="common-error-handler_connector-exception"
+		doc:id="605079c5-35c5-446e-81fe-f8b3580bf759">
+		<flow-ref doc:name="common-error-handler_log" doc:id="e1080cfe-7aba-4d37-9fae-70ccc658f506" name="common-error-handler_log"/>
+		<ee:transform doc:name="Build Error Response"
+			doc:id="c7b3c85a-5ae4-4361-8f5a-ac63afb34a47">
+			<ee:message>
+				<ee:set-payload resource="dwl/common-error.dwl" />
+			
+</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]"
+			doc:name="Set Exception Payload Var"
+			doc:id="bc74c37f-e1b5-4882-906f-cf60ee7790df"
+			variableName="exceptionResponse" />
+		<async doc:name="send msg async"
+			doc:id="bcb86939-4769-45a6-8ad5-9ca711926929">
+			<flow-ref doc:name="common-error-handler_send-all"
+				doc:id="ac6a0b0b-6dae-4d6f-af31-629dc2812239"
+				name="common-error-handler_send-all" />
+		</async>
+	</sub-flow>
+	
+	<sub-flow name="common-error-handler_http-exception"
+		doc:id="193ded90-bed4-43c1-8215-8edb6eb64eaa">
+		<flow-ref doc:name="common-error-handler_log"
+			doc:id="e651dc84-a0e1-4fa4-8026-acb65ac92f0e"
+			name="common-error-handler_log" />
+		<set-variable
+			value="#[error.muleMessage.attributes.statusCode default 500]"
+			doc:name="Set HTTP Status Var"
+			doc:id="e4b92899-03a0-43e9-967c-838e1fdaa993"
+			variableName="httpStatus" />
+		<ee:transform doc:name="Build Error Response"
+			doc:id="6372ffbb-fba1-4d5a-a8cc-2904355e92d3">
+			<ee:message>
+				<ee:set-payload resource="dwl/commor-http-error-response.dwl" />
+			
+</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]"
+			doc:name="Set Exception Payload Var"
+			doc:id="20b184da-f4db-4ec8-8682-0b80a7226759"
+			variableName="exceptionResponse" />
+		<async doc:name="send msg async"
+			doc:id="ef5bd082-090d-446a-9d9a-46b9ecca6374">
+			<flow-ref doc:name="common-error-handler_send-all"
+				doc:id="febbe3cf-da2e-4fe6-9b6b-082d884290b2"
+				name="common-error-handler_send-all" />
+		</async>
+	</sub-flow>
+	<sub-flow name="common-error-handler_send-all"
+		doc:id="26c5fe6b-6e6a-4f4f-86bb-225fb4aa1989">
+		<scatter-gather doc:name="S-G send-all"
+			doc:id="db1bc66c-8dd5-4a41-af82-b63852388317" maxConcurrency="2">
+			<route>
+				<ee:transform doc:name="Build Email"
+					doc:id="ed78dd0d-f255-4c52-a843-86422e7037f7">
+					<ee:message>
+						<ee:set-payload resource="dwl/build-email.dwl" />
+					
+</ee:message>
+				</ee:transform>
+				<vm:publish doc:name="Publish to Email Flow" doc:id="c537d90c-36a8-4c61-bc80-acffffbf788b" config-ref="vmConfig" sendCorrelationId="ALWAYS" queueName="EMAIL"/>
+			</route>
+			<route>
+				<ee:transform doc:name="Build SMS"
+					doc:id="f509a71b-cba9-4bff-ab6a-ecd5aab127da">
+					<ee:message>
+						<ee:set-payload resource="dwl/build-sms.dwl" />
+					
+</ee:message>
+				</ee:transform>
+				<vm:publish doc:name="Publish to SMS flow" doc:id="e50be0c1-4f6d-4d1f-a05b-a04c828a9cb7" config-ref="vmConfig" sendCorrelationId="ALWAYS" queueName="SMS" />
+			
+</route>
+		</scatter-gather>
+	</sub-flow>
+	<flow name="send-email-notification-flow" doc:id="bf9d761c-b102-4ea9-a462-d40a216fd60a">
+		<vm:listener doc:name="Listener - Email" doc:id="c1315ef5-a7de-471d-9ca7-463232bdf3e5" config-ref="vmConfig" queueName="EMAIL"/>
+		<ee:transform doc:name="Email Sent" doc:id="9f42e9c0-acd0-40bb-964e-daa2f8a57a68" >
+			<ee:message >
+				<ee:set-payload resource="dwl/email-sent.dwl" />
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="send-sms-notification-flow" doc:id="c2b2f973-fbfd-414f-a8ed-214dd164c6b0">
+		<vm:listener doc:name="Listener - SMS" doc:id="1791b96a-fc74-4392-b40d-cbe09069a95e" config-ref="vmConfig" queueName="SMS"/>
+		<ee:transform doc:name="SMS Sent" doc:id="26285212-462a-4e3e-bab9-b7a9c03b690d" >
+			<ee:message >
+				<ee:set-payload resource="dwl/sms-sent.dwl" />
+			</ee:message>
+		</ee:transform>
+	</flow>
+
+
+</mule>

@@ -1,0 +1,7 @@
+salesforce:
+  password: "![V52sF2Y33cK3+rvuxJMqgw==]"  
+  consumerSecret: "![nwIcWt4OQmIZB7XSpc5lNVfBhvsT1MLAxBQ8cDlnO8NG1336BB4Rmjc4noXV96FrZmeJbhTlRZfJBlTY1w5DGhuwOCqnrfC9]"
+  securityToken: "![SyGMnVGHMqprNjBUCjeJuydRYOq0DHBRMfOslZjVK50=]"
+keystore:
+  keyPassword: "![AyKFohxnUnaYiMkC6qtH/A==]"
+  password: "![AyKFohxnUnaYiMkC6qtH/A==]"

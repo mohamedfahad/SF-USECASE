@@ -2,7 +2,15 @@
 output application/json
 ---
 {
-  id: payload.id,
-  status: 0,  
-  message: "Account updated successfully"
+  "responseStatus": if (payload.successful) "SUCCESS" else "ERROR",
+  "resultMessages": payload.items map {
+    "severity": if ($.successful) "INFO" else "ERROR",
+    "message": if ($.successful) "Account was updated" else $.message,
+    "parameters": if ($.successful) [
+        {
+            "paramName": "AccountId",
+            "paramValue": $.id
+        }
+    ] else []
+  }
 }

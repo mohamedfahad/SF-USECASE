@@ -1,0 +1,9 @@
+sf-accounts-sys-api: 
+  client-secret: ""
+country-lookup-sys-api.host:
+  client-secret: ""
+keystore:
+  keyPassword: ""
+  password: ""
+  
+  

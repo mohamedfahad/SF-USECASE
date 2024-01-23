@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="implementation-error-handler" doc:id="77e64838-0f3c-43dd-949a-76edf31ee4c3">
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate - Query Account Failed" doc:id="f9af1453-d679-4cdb-aa45-d5ef635934dd" type="SALESFORCE:COMMUNICATION, SALESFORCE:INSUFFICIENT_PERMISSIONS, SALESFORCE:INVALID_INPUT, SALESFORCE:INVALID_RESPONSE, SALESFORCE:LIMIT_EXCEEDED, SALESFORCE:MUTUAL_AUTHENTICATION_FAILED, SALESFORCE:NOT_FOUND, SALESFORCE:OPERATION_NOT_SUPPORTED, SALESFORCE:RETRY_EXHAUSTED, SALESFORCE:TIMEOUT, SALESFORCE:UNAVAILABLE">
+					<set-variable value="#[error.errorMessage.attributes.statusCode]" doc:name="httpStatus" doc:id="6cd47542-54c5-4c65-a054-942eac39cc7c" variableName="httpStatus"/>
+					<flow-ref doc:name="common-error-handler_connector-exception" doc:id="362ab8a4-a7d1-4a8a-a8e6-45183904d467" name="common-error-handler_connector-exception"/>
+		</on-error-propagate>
+	</error-handler>
+</mule>
