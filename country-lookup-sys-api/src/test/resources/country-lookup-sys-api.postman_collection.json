@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "06d4983a-a308-46b8-a383-9189e8ae4638",
+		"name": "country-lookup-sys-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11797284"
+	},
+	"item": [
+		{
+			"name": "Get Country From Country Code",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "correlation-id",
+						"value": "test",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{localhost}}/api/getcountry?billingcountryiso=THA&shippingcountryiso=IND",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"getcountry"
+					],
+					"query": [
+						{
+							"key": "billingcountryiso",
+							"value": "THA"
+						},
+						{
+							"key": "shippingcountryiso",
+							"value": "IND"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alive",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "correlation-id",
+						"value": "test",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{localhost}}/api/alive?checkDependencies=false",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"alive"
+					],
+					"query": [
+						{
+							"key": "checkDependencies",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "https://localhost:8082",
+			"type": "string"
+		},
+		{
+			"key": "cloudhubHost",
+			"value": "https://dev-country-lookup-sys-api-96dcaf.5sc6y6-1.usa-e2.cloudhub.io",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="implementaion_error-handler" doc:id="6a860ede-f494-4dfc-9c2c-73d9ce647a44" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1160749e-954b-4462-9251-d771925af0a6" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:CLIENT_SECURITY, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE">
+			<set-variable value="#[error.errorMessage.attributes.statusCode]" doc:name="httpStatus" doc:id="b5c01f21-4f6c-4d54-a311-76628d4a3e59" variableName="httpStatus" />
+			<flow-ref doc:name="common-error-handler_http-exception" doc:id="6a61610d-83ec-4298-97b3-6b2664341f3b" name="common-error-handler_http-exception"/>
+		</on-error-propagate>
+	</error-handler>
+</mule>

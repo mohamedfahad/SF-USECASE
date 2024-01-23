@@ -14,12 +14,21 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 		</scheduler>
 		<flow-ref doc:name="implementation-get-country-request" doc:id="c55cde86-b46f-4b31-a732-8adaf07c7c8f" name="implementation-get-country-request"/>
 		<os:store doc:id="7e452e2c-1ab4-4104-8ca3-b844462ab0fd" doc:name="Store - Countries Payload" key="#[p('os.countryPayloadKey')]" objectStore="globalObjectStore"/>
+		<error-handler ref="implementaion_error-handler" />
 	</flow>
 	<sub-flow name="implementation-get-country-request" doc:id="dd004dc5-e0c3-464f-b94b-33c667168ffa" >
-		<try doc:name="Try Request to First.org API" doc:id="fb8a4dfd-d508-4f11-a4db-1dbc321e5d06">
-			<http:request method="OPTIONS" doc:name="Request to First.org API " doc:id="f066cbf5-f3f3-442a-860c-260f9b5fe399" url="https://api.first.org/data/v1/countries?scope=iso">
+		<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Country Request" doc:id="1139a9fb-0af5-45b7-bdab-7e2d9a8e4c4b" millisBetweenRetries="#[p('timeBetweenRetries')]">
+			<try doc:name="Try Request to First.org API" doc:id="fb8a4dfd-d508-4f11-a4db-1dbc321e5d06">
+			<http:request method="GET" doc:name="Request to First.org API " doc:id="f066cbf5-f3f3-442a-860c-260f9b5fe399" config-ref="HTTP_Request_configuration" path="${country-lookup.url}">
+				<http:query-params><![CDATA[#[output application/java
+---
+{
+	"scope" : "iso"
+}]]]></http:query-params>
 		</http:request>
+				<error-handler ref="implementaion_error-handler" />
 			</try>
+		</until-successful>
 	</sub-flow>
 	<sub-flow name="implementation_get-country-name" doc:id="a32f839d-5c77-4d7a-b929-3332c8ca04cc" >
 		<logger level="INFO" doc:name="Start of transaction" doc:id="69527315-ad6a-459d-b979-499828796364" message="Start of Get Country Name transaction for transaction-id #[vars.transactionId]" />

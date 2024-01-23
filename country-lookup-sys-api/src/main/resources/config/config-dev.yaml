@@ -1,5 +1,16 @@
+https:
+  port: "8082"
 countryRequest:
   url: ""
   queryString: "scope=iso"
 os:
   countryPayloadKey: ""
+common:  
+  notifications:
+    send: "none"
+    email:      
+      from-address: "noreply@invalid.com"      
+      to-address: "nodest@invalid.com"
+    sms:      
+      from-number: "18005551234"      
+      to-number: "18005551234"
