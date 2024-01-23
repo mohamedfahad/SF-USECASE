@@ -36,6 +36,4 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>
 	<configuration doc:name="Configuration" doc:id="b0d24246-df68-4fa6-9554-920c80bcceca" defaultErrorHandler-ref="error-handler_common" />
-	<global-property doc:name="Global Property" doc:id="91636568-623f-415e-a483-66bee0420341" name="env" value="local" />
-	<global-property doc:name="Global Property" doc:id="4c045571-2190-4d5a-930f-fb4aef1cc29c" name="encryptKey" value="sfusecase" />
 </mule>

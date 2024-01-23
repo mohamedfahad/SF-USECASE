@@ -1,5 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="ping_get-health" doc:id="ed875a3b-358c-4ca6-b63a-7155a33bd1a4" >
+        <set-variable value='#[attributes.queryParams.checkDependencies == "true" default false]' doc:name="checkDependencies" doc:id="2a1c9542-dcd3-418f-aad1-4b2c72c5c5fb" variableName="checkDependencies"/>
+        <choice doc:name="Choice for check dependencies" doc:id="8eb33dbc-fc5a-45c8-a0d0-946aecd9916d" >
+            <when expression="#[vars.checkDependencies]">
+                <flow-ref doc:name="Check Dependencies" doc:id="4c7eedf4-582e-4d35-9a76-388ab7d89229" name="ping_check-dependencies" target="dependencyList"/>
+            </when>
+            <otherwise>
+                <set-variable doc:name="dependencyList" doc:id="b846e711-ce48-4409-8805-cc919dfbc34d" variableName="dependencyList" value="#[null]"/>
+            </otherwise>
+        </choice>
+        <ee:transform doc:name="Map Response" doc:id="e90529c1-a938-4d90-b03f-063976794ec0">
+                    <ee:message>
+                <ee:set-payload resource="dwl/ping-response-payload.dwl" />
+                    </ee:message>
+                </ee:transform>
+        <set-variable value="200" doc:name="httpStatus" doc:id="ffee3d03-e8bf-4249-b5ed-c88a2470b279" variableName="httpStatus"/>
+    </sub-flow>
+    <sub-flow name="ping_check-dependencies" doc:id="733cabf1-f727-4e0c-a487-bb72e26d570d" >
+<scatter-gather doc:name="Scatter-Gather" doc:id="74297af2-883f-4829-aaf2-23fffd8e55bd" >
+            <route >
+                <flow-ref doc:name="ping_check-sf-accounts-prc-api-dependencies" doc:id="77638da9-c65e-4183-8cb7-07b4896ceb40" name="ping_check-sf-accounts-prc-api-dependencies"/>
+            </route>
+            <route >
+                <flow-ref doc:name="ping_check-salesforce-accounts-Sys-dependencies" doc:id="a7c56ab3-7717-4c3e-9f4e-1630f5e06c8c" name="ping_check-salesforce-accounts-Sys-dependencies"/>
+            </route>
+        </scatter-gather>   
+    </sub-flow>
+<sub-flow name="ping_check-sf-accounts-prc-api-dependencies" doc:id="251742c5-5c6a-4136-a382-b4041bfad498" >
+        <set-variable doc:name="sysCheckHost" doc:id="86fc2e31-caf4-4133-b539-dc3e519c2e9f" variableName="sysCheckHost" value="${sf-accounts-prc-api.host}"/>
+        
+        <try doc:name="Try - Getting Status of Salesforce Accounts Prc API" doc:id="c92eebc9-ee68-4143-8007-dbd9a88d5997" >
+<http:request method="GET" doc:name="Invoke Salesforce Accounts Prc API" doc:id="f579ade3-ebb0-4f3e-8ddc-db0f58c3cef0" config-ref="sfAccountsPrcApiRequestConfig" path="/api/alive">
+      </http:request>           <set-variable value="#['UP']" doc:name="backendSystemStatus" doc:id="bdcb4a4e-6e0b-484b-8f27-46b1d93ccc6a" variableName="backendSystemStatus"/>
+			<error-handler ref="ping-error-handler" />
+        
+</try>
+        <ee:transform doc:name="Dependency Status Response" doc:id="01d662f1-bee2-43dc-b761-9144ba248992">
+                <ee:message>
+                <ee:set-payload resource="dwl/ping-check-dependency-sys-api-response.dwl" />
+                </ee:message>
+            </ee:transform>
+    </sub-flow>
+    <sub-flow name="ping_check-salesforce-accounts-Sys-dependencies" doc:id="865e8e01-78e7-4315-bfc7-9b61dab51e48" >
+        <set-variable doc:name="sysCheckHost" doc:id="d486ddea-6dec-44b5-8dec-05dd97d71ce5" variableName="sysCheckHost" value="${sf-accounts-sys-api.host}"/>
+        
+        <try doc:name="Try - Getting Status of Salesforce Accounts Sys API" doc:id="b27f37f6-f58a-4b91-87a1-0a1e639c46b0" >
+<http:request method="GET" doc:name="Invoke Salesforce Accounts Sys API" doc:id="ffbad9ae-d972-4048-89bf-85dc737c75e4" config-ref="sfAccountsSysApiRequestConfig" path="/api/alive" sendCorrelationId="AUTO" correlationId="#[correlationId]">
+        <reconnect />
+      </http:request>
+                <set-variable value="#['UP']" doc:name="backendSystemStatus" doc:id="912b0f54-9553-40b4-a402-c00ae02bceb0" variableName="backendSystemStatus"/>
+			<error-handler ref="ping-error-handler" />
+        
+</try>
+        <ee:transform doc:name="Dependency Status Response" doc:id="6b018f2d-f00e-494b-9246-1fa237d7c41d">
+                <ee:message>
+                <ee:set-payload resource="dwl/ping-check-dependency-sys-api-response.dwl" />
+                </ee:message>
+            </ee:transform>
+    </sub-flow>
+        
+	</mule>

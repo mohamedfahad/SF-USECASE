@@ -3,13 +3,12 @@ https:
 sf-accounts-sys-api:
   client-id: ""
   client-secret: ""
-  host: ""
-  port: ""
+  host: "dev-salesforce-accounts-sys-api-96dcaf.5sc6y6-2.usa-e2.cloudhub.io"
+  port: "443"
+  url: "/api/accounts"
 country-lookup-sys-api:
   client-id: ""
   client-secret: ""
-  host: ""
-  port: ""
-keystore:
-  path: "certs/country-lookup-sapi"
-  alias: "server"
+  host: "dev-country-lookup-sys-api-96dcaf.5sc6y6-1.usa-e2.cloudhub.io"
+  port: "443"
+  url: "/api/getcountry"

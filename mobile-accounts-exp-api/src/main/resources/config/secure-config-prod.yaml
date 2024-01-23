@@ -1,0 +1,9 @@
+https:
+  port: "8082"
+sf-accounts-sys-api: 
+  client-secret: ""
+sf-accounts-prc-api:
+  client-secret: ""
+keystore:
+  keyPassword: ""
+  password: ""

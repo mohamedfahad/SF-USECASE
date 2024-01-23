@@ -27,7 +27,12 @@ payload]]></ee:set-variable>
 		<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Get Country Name" doc:id="e46e069c-a6ef-4ef3-a8a0-e0a43d068b1d" millisBetweenRetries="#[p('timeBetweenRetries')]">
 			<try doc:name="Try - Get Country Name" doc:id="c4240864-67f8-440e-b3c5-a4e183b055e2">
 			<http:request method="GET" doc:name="GET - First Country Lookup Sys API" doc:id="785e8c26-10db-4f30-9b72-518218be4046" target="countryNames" config-ref="countryLookupRequestConfig" path="${country-lookup-sys-api.url}">
-			<http:query-params><![CDATA[#[output application/java
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"correlationId" : vars.transactionId
+}]]]></http:headers>
+					<http:query-params><![CDATA[#[output application/java
 ---
 {
 	"billingcountryiso" : vars.countryIso.billingCountryIso,
@@ -53,7 +58,13 @@ vars.incomingRequest update {
 		</ee:transform>
 		<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Create Account" doc:id="4a0d955b-9d6f-4500-a064-e348316a1b67" millisBetweenRetries="#[p('timeBetweenRetries')]">
 			<try doc:name="Try - Create Account" doc:id="8735596b-1cd0-41e0-8287-20789c3184c3">
-			<http:request method="POST" doc:name="POST - Salesforce Accounts Sys API" doc:id="f18efae7-3d7f-4547-8d03-3996791d7dae" config-ref="sfAccountsRequestConfig" path="${sf-accounts-sys-api.url}"/>
+			<http:request method="POST" doc:name="POST - Salesforce Accounts Sys API" doc:id="f18efae7-3d7f-4547-8d03-3996791d7dae" config-ref="sfAccountsRequestConfig" path="${sf-accounts-sys-api.url}">
+					<http:headers ><![CDATA[#[output application/java
+---
+{
+	"correlationId" : vars.transactionId
+}]]]></http:headers>
+				</http:request>
 			<error-handler ref="implementation-error-handler" />
 		</try>
 			</until-successful>

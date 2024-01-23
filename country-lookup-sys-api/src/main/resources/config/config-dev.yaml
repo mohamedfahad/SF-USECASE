@@ -1,10 +1,11 @@
 https:
   port: "8082"
-countryRequest:
-  url: ""
-  queryString: "scope=iso"
+country-lookup:
+  host: "api.first.org"
+  url: "/data/v1/countries"
+  port: "443"
 os:
-  countryPayloadKey: ""
+  countryPayloadKey: "countryPayload"
 common:  
   notifications:
     send: "none"

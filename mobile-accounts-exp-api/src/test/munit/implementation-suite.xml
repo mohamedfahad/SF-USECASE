@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-suite.xml" />
+	<munit:test name="implementation_create-account-test" doc:id="039ccf2d-7a3e-4ffc-b390-7df13310916b" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock POST Request to SF Accounts Process API" doc:id="d3bb4ca3-1def-4bbd-a891-e1ac308fe507" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="02887cdb-beda-4001-905c-d71006fc2e8b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://implementationcreateaccounttest\mock_payload.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://implementationcreateaccounttest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://implementationcreateaccounttest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="transactionId" value="#[output application/java --- readUrl('classpath://implementationcreateaccounttest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="79ea0502-1377-4b9b-a3f8-7458c70fb402" >
+				<munit:payload value="#[output application/json  --- readUrl('classpath://implementationcreateaccounttest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json " />
+				<munit:attributes value="#[readUrl('classpath://implementationcreateaccounttest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://implementationcreateaccounttest\set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[output application/java --- readUrl('classpath://implementationcreateaccounttest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to implementation_create-account" doc:id="1deea6e2-c237-4cb8-87c1-7282f65160fd" name="implementation_create-account"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="3e93ab77-c08c-4bed-bfc3-90040a14e9de" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import implementationcreateaccounttest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify JSON Payload" doc:id="1517e931-2713-41a5-be5b-d997a6a6d4e4" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="b61c85a9-7e5a-43c7-af74-a0593d98536d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="implementation_retrieve-account-test" doc:id="27409574-7e98-490e-8b5f-f43037957a85" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock GET Request to SF Accounts Sys API" doc:id="9664266d-a9f6-4993-a6b6-1c15e19fa8a2" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7e2a9a23-d931-461d-ab12-7468d0b657e0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://implementationretrieveaccounttest\mock_payload.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://implementationretrieveaccounttest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://implementationretrieveaccounttest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="transactionId" value="#[output application/java --- readUrl('classpath://implementationretrieveaccounttest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="86792c81-7141-48b7-b2bb-88b27dbfbd3e" >
+				<munit:payload value="#[readUrl('classpath://implementationretrieveaccounttest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://implementationretrieveaccounttest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://implementationretrieveaccounttest\set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[output application/java --- readUrl('classpath://implementationretrieveaccounttest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to implementation_retrieve-account" doc:id="e03508cb-717f-4bf9-8b9d-4ec051ffe4c3" name="implementation_retrieve-account"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="13c6cc38-7fcc-4612-af65-fe887f97baff" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import implementationretrieveaccounttest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify JSON Payload" doc:id="54f77531-6ca8-47c8-a44b-87500df1433c" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2c57bd53-c2a9-437f-8061-1402405c6b41" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="implementation_update-account-test" doc:id="5f253e68-be9d-41c9-9db9-16a308a8789e" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock PUT Request to SF Accounts Sys API" doc:id="64755645-f971-4382-839e-866c22f4969c" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="81d9bb67-480d-490f-b364-46283f8c6026" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://implementationupdateaccounttest\mock_payload.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://implementationupdateaccounttest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://implementationupdateaccounttest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="transactionId" value="#[output application/java --- readUrl('classpath://implementationupdateaccounttest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="4928c6bb-d6ee-496c-b518-e5ec1d70b242" >
+				<munit:payload value="#[output application/json  --- readUrl('classpath://implementationupdateaccounttest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json " />
+				<munit:attributes value="#[readUrl('classpath://implementationupdateaccounttest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://implementationupdateaccounttest\set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[output application/java --- readUrl('classpath://implementationupdateaccounttest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to implementation_update-account" doc:id="71efc474-da61-4192-af4f-e66e43370896" name="implementation_update-account"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="ccc400a4-56cd-439c-9559-a134a8d975ea" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import implementationupdateaccounttest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify JSON Payload" doc:id="7c2c7cb8-79b2-45a4-a49d-80c31caeaa0f" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="e9b636c0-512b-4636-a502-096ca0c189aa" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

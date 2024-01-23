@@ -21,7 +21,7 @@
 				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
 			</http:error-response>
 		</http:listener>
-		<set-variable value='#[attributes.headers."correlation-id" default correlationId]' doc:name="TransactionId" doc:id="02b6f0a1-fa46-4a71-a97d-185f2f79be03" variableName="transactionId" />
+		<set-variable value='#[attributes.headers."correlationId" default correlationId]' doc:name="TransactionId" doc:id="02b6f0a1-fa46-4a71-a97d-185f2f79be03" variableName="transactionId" />
 		<apikit:router
 			config-ref="salesforce-accounts-system-api-config" />
 	</flow>

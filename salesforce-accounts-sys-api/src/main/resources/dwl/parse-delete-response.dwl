@@ -2,7 +2,15 @@
 output application/json
 ---
 {
-  id: vars.accountId,
-  status: 1,
-  message: "Account deleted successfully"
+  "responseStatus": if (payload.successful) "SUCCESS" else "ERROR",
+  "resultMessages": payload.items map {
+    "severity": if ($.successful) "INFO" else "ERROR",
+    "message": if ($.successful) "Account was deleted" else $.message,
+    "parameters": if ($.successful) [
+        {
+            "paramName": "AccountId",
+            "paramValue": $.id
+        }
+    ] else []
+  }
 }

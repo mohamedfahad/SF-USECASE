@@ -1,10 +1,11 @@
 https:
   port: "8082"
-countryRequest:
+country-lookup:
+  host: ""
   url: ""
-  queryString: "scope=iso"
+  port: ""
 os:
-  countryPayloadKey: ""
+  countryPayloadKey: "countryPayload"
 common:  
   notifications:
     send: "none"

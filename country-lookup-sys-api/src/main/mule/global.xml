@@ -25,7 +25,6 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 		</vm:queues>
 	</vm:config>
 	<configuration-properties doc:name="Configuration properties" doc:id="19f2e044-0604-4c8e-b8f3-b8f917522c01" file="config/config-${env}.yaml" />
-	<global-property doc:name="Global Property" doc:id="0801801d-3408-4427-a617-a1bf6d8a6a44" name="env" value="local" />
 	<tls:context name="tlsContext" doc:name="TLS Context" doc:id="b5519264-0d6e-431c-b384-e9dcb38fca07" >
 		<tls:key-store type="pkcs12" path="${keystore.path}" alias="${keystore.alias}" keyPassword="${secure::keystore.keyPassword}" password="${secure::keystore.password}" />
 	</tls:context>
@@ -38,7 +37,6 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="31600ab9-6ebe-4c7c-8a0e-4f7a7253e277" file="config\secure-config-${env}.yaml" key="${encryptKey}">
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>
-	<global-property doc:name="Global Property" doc:id="1a9c6586-3b20-4773-8baf-f0d27a20e32f" name="encryptKey" value="sfusecase" />
 	<configuration doc:name="Configuration" doc:id="ed4612ad-a439-4082-93a0-d79db5f69c45" defaultErrorHandler-ref="error-handler_common" />
 	
 	

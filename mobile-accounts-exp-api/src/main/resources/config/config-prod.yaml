@@ -1,0 +1,12 @@
+sf-accounts-prc-api:
+  client-id: ""
+  client_secret: ""
+  host: ""
+  port: ""
+  path: ""
+sf-accounts-sys-api:
+  cliient_id: ""
+  client_secret: ""
+  host: ""
+  port: ""
+  path: ""

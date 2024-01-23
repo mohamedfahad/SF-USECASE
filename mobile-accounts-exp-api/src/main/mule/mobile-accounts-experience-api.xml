@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-        <flow name="mobile-accounts-experience-api-main">
+    <flow name="mobile-accounts-experience-api-main">
         <http:listener config-ref="apiHttpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
@@ -10,6 +10,7 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
+        <set-variable value="#[attributes.headers.&quot;correlationId&quot; default correlationId]" doc:name="TransactionId" doc:id="164142fe-3479-4980-8330-08ccb206820f" variableName="transactionId" />
         <apikit:router config-ref="mobile-accounts-experience-api-config" />
     </flow>
     <flow name="mobile-accounts-experience-api-console">
@@ -25,116 +26,18 @@
         <apikit:console config-ref="mobile-accounts-experience-api-config" />
     </flow>
     <flow name="put:\accounts\(accountId):application\json:mobile-accounts-experience-api-config">
-        <flow-ref doc:name="implementation_update-account" doc:id="cb43ce71-0ac6-4d96-b6a0-b35bbf194d66" name="implementation_update-account"/>
-		<ee:transform doc:name="Transform Message">
-            <ee:variables>
-                <ee:set-variable variableName="accountId">attributes.uriParams.'accountId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  id: "0015j00000VNSljAAH",
-  status: 0,
-  message: "Account updated successfully"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="implementation_update-account" doc:id="cb43ce71-0ac6-4d96-b6a0-b35bbf194d66" name="implementation_update-account" />
     </flow>
     <flow name="delete:\accounts\(accountId):mobile-accounts-experience-api-config">
-        <flow-ref doc:name="implementation_delete-account" doc:id="8f9a780a-1875-4e9a-b67a-cf8c9b0d039e" name="implementation_delete-account"/>
-		<ee:transform doc:name="Transform Message">
-            <ee:variables>
-                <ee:set-variable variableName="accountId">attributes.uriParams.'accountId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  id: "0015j00000VNSljAAH",
-  status: 0,
-  message: "Account deleted successfully"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="implementation_delete-account" doc:id="8f9a780a-1875-4e9a-b67a-cf8c9b0d039e" name="implementation_delete-account" />
     </flow>
     <flow name="get:\accounts\(accountId):mobile-accounts-experience-api-config">
-        <flow-ref doc:name="implementation_retrieve-account" doc:id="c9129041-35f7-4138-b7e4-870ddda2993a" name="implementation_retrieve-account"/>
-		<ee:transform doc:name="Transform Message">
-            <ee:variables>
-                <ee:set-variable variableName="accountId">attributes.uriParams.'accountId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  name: "Sravanthi",
-  email: "abc@xyz.com",
-  number: "1011",
-  phone: "90311234567",
-  fax: "21312312",
-  billingAddress: {
-    street: "High Street",
-    city: "Hyderabad",
-    state: "Telangana",
-    postalCode: "500089",
-    country: "India"
-  },
-  shippingAddress: {
-    street: "Random Street",
-    city: "Bangalore",
-    state: "Karnataka",
-    postalCode: "600089",
-    country: "India"
-  }
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="implementation_retrieve-account" doc:id="c9129041-35f7-4138-b7e4-870ddda2993a" name="implementation_retrieve-account" />
     </flow>
     <flow name="get:\alive:mobile-accounts-experience-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="42c5968b-79fe-4d59-8691-48ec830dca09" />
-		<ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  status: "OK",
-  apiName: "accelerator-salesforce-sys-api",
-  apiVersion: "1.3.0",
-  timestamp: "2020-08-01T13:15:25.000Z",
-  dependencies: [
-    {
-      name: "Salesforce",
-      status: "UP"
-    }
-  ]
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="ping_get-health" doc:id="42c5968b-79fe-4d59-8691-48ec830dca09" name="ping_get-health" />
     </flow>
     <flow name="post:\accounts:application\json:mobile-accounts-experience-api-config">
-        <flow-ref doc:name="implementation_create-account" doc:id="4b60a11a-14e9-4be0-9084-350679d196b1" name="implementation_create-account"/>
-		<ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  id: "0015j00000VNSljAAH",
-  status: 0,
-  message: "Account created successfully"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="implementation_create-account" doc:id="4b60a11a-14e9-4be0-9084-350679d196b1" name="implementation_create-account" />
     </flow>
 </mule>

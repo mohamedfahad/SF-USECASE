@@ -10,7 +10,8 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:router config-ref="salesforce-accounts-process-api-config" /> 
+        <set-variable value='#[attributes.headers."correlationId" default correlationId]' doc:name="TransactionId" doc:id="53c02a63-fc9c-4a6d-add6-7f17af24582f" variableName="transactionId" />
+		<apikit:router config-ref="salesforce-accounts-process-api-config" /> 
     </flow>
     <flow name="salesforce-accounts-process-api-console">
         <http:listener config-ref="apiHttpListenerConfig" path="/console/*">

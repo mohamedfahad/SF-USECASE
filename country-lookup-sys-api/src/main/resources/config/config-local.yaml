@@ -4,7 +4,6 @@ country-lookup:
   host: "api.first.org"
   url: "/data/v1/countries"
   port: "443"
-  queryString: "scope=iso"
 os:
   countryPayloadKey: "countryPayload"
 common:  
