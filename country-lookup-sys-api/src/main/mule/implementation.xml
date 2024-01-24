@@ -19,7 +19,7 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 	<sub-flow name="implementation-get-country-request" doc:id="dd004dc5-e0c3-464f-b94b-33c667168ffa" >
 		<until-successful maxRetries="#[p('maxRetries')]" doc:name="Until Successful - Country Request" doc:id="1139a9fb-0af5-45b7-bdab-7e2d9a8e4c4b" millisBetweenRetries="#[p('timeBetweenRetries')]">
 			<try doc:name="Try Request to First.org API" doc:id="fb8a4dfd-d508-4f11-a4db-1dbc321e5d06">
-			<http:request method="GET" doc:name="Request to First.org API " doc:id="f066cbf5-f3f3-442a-860c-260f9b5fe399" config-ref="HTTP_Request_configuration" path="${country-lookup.url}">
+			<http:request method="GET" doc:name="Request to First.org API " doc:id="f066cbf5-f3f3-442a-860c-260f9b5fe399" config-ref="countryLookupRequestConfig" path="${country-lookup.url}">
 				<http:query-params><![CDATA[#[output application/java
 ---
 {

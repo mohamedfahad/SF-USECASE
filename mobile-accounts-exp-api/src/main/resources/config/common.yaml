@@ -1,6 +1,7 @@
 api:
   name: "mobile-accounts-exp-api"
   version: "1.0.0"
+  instanceId: ""
 common:  
   notifications:
     send: "none"

@@ -1,12 +1,14 @@
+https:
+  port: "8082"
 sf-accounts-prc-api:
   client-id: ""
-  client_secret: ""
+  client-secret: ""
   host: ""
   port: ""
   path: ""
 sf-accounts-sys-api:
-  cliient_id: ""
-  client_secret: ""
+  client-id: ""
+  client-secret: ""
   host: ""
   port: ""
   path: ""

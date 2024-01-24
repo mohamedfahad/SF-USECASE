@@ -1,0 +1,196 @@
+{
+	"info": {
+		"_postman_id": "636e2bce-6602-4c11-92ce-b62e0e1d817d",
+		"name": "salesforce-accounts-sys-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11797284"
+	},
+	"item": [
+		{
+			"name": "Create Account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "0de63d9a4269416dbb19c3b38c788f9b",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "4A4849F2609a4597BD73ce7e0793Fae8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Policy\",\r\n  \"email\": \"123reqstyq@xyz.com\",\r\n  \"number\": \"125612666\",\r\n  \"phone\": \"9123031134567\",\r\n  \"fax\": \"98123012\",\r\n  \"billingAddress\": {\r\n    \"street\": \"High Street\",\r\n    \"city\": \"Hyderabad\",\r\n    \"state\": \"Telangana\",\r\n    \"postalCode\": \"500089\",\r\n    \"countryIso\": \"KEN\"\r\n  },\r\n  \"shippingAddress\": {\r\n    \"street\": \"Random Street\",\r\n    \"city\": \"Bangalore\",\r\n    \"state\": \"Karnataka\",\r\n    \"postalCode\": \"600089\",\r\n    \"countryIso\": \"IND\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{cloudhubHost}}/api/accounts",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Account By accountId",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "0de63d9a4269416dbb19c3b38c788f9b",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "4A4849F2609a4597BD73ce7e0793Fae8",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{cloudhubHost}}/api/accounts/:id",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"accounts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "0015g00000QcUPvAAN"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Account By accountId",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Test\",\r\n  \"email\": \"def@xyz.com\",\r\n  \"number\": \"1015\",\r\n  \"phone\": \"903111234567\",\r\n  \"fax\": \"21312312\",\r\n  \"billingAddress\": {\r\n    \"street\": \"High Street\",\r\n    \"city\": \"Hyderabad\",\r\n    \"state\": \"Telangana\",\r\n    \"postalCode\": \"500089\",\r\n    \"country\": \"New Zealand\"\r\n  },\r\n  \"shippingAddress\": {\r\n    \"street\": \"Random Street\",\r\n    \"city\": \"Bangalore\",\r\n    \"state\": \"Karnataka\",\r\n    \"postalCode\": \"600089\",\r\n    \"country\": \"England\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{cloudhubHost}}/api/accounts/:id",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"accounts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "0015g00000QcUPvAAM"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Account by accountId",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{cloudhubHost}}/api/accounts/:id",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"accounts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "0015g00000QcUQCAA3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alive",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{cloudhubHost}}/api/alive",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"alive"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "https://localhost:8082",
+			"type": "string"
+		},
+		{
+			"key": "cloudhubHost",
+			"value": "https://dev-salesforce-accounts-sys-api-96dcaf.5sc6y6-2.usa-e2.cloudhub.io",
+			"type": "string"
+		}
+	]
+}

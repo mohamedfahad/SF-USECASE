@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "e0292ddc-8f4e-41b7-942e-e8d9699bb318",
+		"name": "mobile-accounts-exp-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11797284"
+	},
+	"item": [
+		{
+			"name": "Create Account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "b4bb3955b784451ab3d0494cfcf051bf",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "79d63DB0A194426990eC174235c7138f",
+						"type": "text"
+					},
+					{
+						"key": "correlationId",
+						"value": "testLocal",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"APIexp Testing\",\r\n  \"email\": \"abs789d@xyz.com\",\r\n  \"number\": \"1011456\",\r\n  \"phone\": \"90311234567\",\r\n  \"fax\": \"21312312\",\r\n  \"billingAddress\": {\r\n    \"street\": \"High Street\",\r\n    \"city\": \"Hyderabad\",\r\n    \"state\": \"Telangana\",\r\n    \"postalCode\": \"500089\",\r\n    \"countryIso\": \"KOR\"\r\n  },\r\n  \"shippingAddress\": {\r\n    \"street\": \"Random Street\",\r\n    \"city\": \"Bangalore\",\r\n    \"state\": \"Karnataka\",\r\n    \"postalCode\": \"600089\",\r\n    \"countryIso\": \"IND\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{cloudhubHost}}/api/accounts",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Account By accountId",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "b4bb3955b784451ab3d0494cfcf051bf",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "79d63DB0A194426990eC174235c7138f",
+						"type": "text"
+					},
+					{
+						"key": "correlationId",
+						"value": "testLocal",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{cloudhubHost}}/api/accounts/0015g00000QcUPvAAN",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"accounts",
+						"0015g00000QcUPvAAN"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Account By accountId",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "b4bb3955b784451ab3d0494cfcf051bf",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "79d63DB0A194426990eC174235c7138f",
+						"type": "text"
+					},
+					{
+						"key": "correlationId",
+						"value": "testLocal",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Abhishek Fourth Updated\",\r\n    \"email\": \"testemail@email.com\",\r\n    \"number\": \"1234566\",\r\n    \"phone\": \"+91-906\",\r\n    \"fax\": \"32494544\",\r\n    \"billingAddress\": {\r\n        \"street\": \"abc\",\r\n        \"city\": \"Satara\",\r\n        \"state\": \"Maharashtra\",\r\n        \"postalCode\": \"123456\",\r\n        \"country\": \"Libya\"\r\n    },\r\n    \"shippingAddress\": {\r\n        \"street\": null,\r\n        \"city\": null,\r\n        \"state\": null,\r\n        \"postalCode\": null,\r\n        \"country\": \"India\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{cloudhubHost}}/api/accounts/:id",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"accounts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "0015g00000QcUPvAAN"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Account By accountId",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "b4bb3955b784451ab3d0494cfcf051bf",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "79d63DB0A194426990eC174235c7138f",
+						"type": "text"
+					},
+					{
+						"key": "correlationId",
+						"value": "testLocal",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{cloudhubHost}}/api/accounts/:id",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"accounts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "0015g00001aplw4AAA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alive",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "b4bb3955b784451ab3d0494cfcf051bf",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "79d63DB0A194426990eC174235c7138f",
+						"type": "text"
+					},
+					{
+						"key": "correlationId",
+						"value": "testLocal",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{cloudhubHost}}/api/alive?checkDependencies=true",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"alive"
+					],
+					"query": [
+						{
+							"key": "checkDependencies",
+							"value": "true"
+						},
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "https://localhost:8082",
+			"type": "string"
+		},
+		{
+			"key": "cloudhubHost",
+			"value": "https://dev-mob-accounts-prc-api-96dcaf.5sc6y6-3.usa-e2.cloudhub.io",
+			"type": "string"
+		}
+	]
+}

@@ -39,6 +39,13 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
         
         <try doc:name="Try - Getting Status of Salesforce Accounts Prc API" doc:id="c92eebc9-ee68-4143-8007-dbd9a88d5997" >
 <http:request method="GET" doc:name="Invoke Salesforce Accounts Prc API" doc:id="f579ade3-ebb0-4f3e-8ddc-db0f58c3cef0" config-ref="sfAccountsPrcApiRequestConfig" path="/api/alive">
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"client_id" : p('sf-accounts-prc-api.client-id'),
+	"client_secret": p('sf-accounts-prc-api.client-secret')
+}]]]></http:headers>
+
       </http:request>           <set-variable value="#['UP']" doc:name="backendSystemStatus" doc:id="bdcb4a4e-6e0b-484b-8f27-46b1d93ccc6a" variableName="backendSystemStatus"/>
 			<error-handler ref="ping-error-handler" />
         
@@ -55,7 +62,14 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
         <try doc:name="Try - Getting Status of Salesforce Accounts Sys API" doc:id="b27f37f6-f58a-4b91-87a1-0a1e639c46b0" >
 <http:request method="GET" doc:name="Invoke Salesforce Accounts Sys API" doc:id="ffbad9ae-d972-4048-89bf-85dc737c75e4" config-ref="sfAccountsSysApiRequestConfig" path="/api/alive" sendCorrelationId="AUTO" correlationId="#[correlationId]">
         <reconnect />
-      </http:request>
+				<http:headers ><![CDATA[#[output application/java
+---
+{	
+	"client_id" : p('sf-accounts-sys-api.client-id'),
+	"client_secret": p('sf-accounts-sys-api.client-secret')
+}]]]></http:headers>
+      
+</http:request>
                 <set-variable value="#['UP']" doc:name="backendSystemStatus" doc:id="912b0f54-9553-40b4-a402-c00ae02bceb0" variableName="backendSystemStatus"/>
 			<error-handler ref="ping-error-handler" />
         

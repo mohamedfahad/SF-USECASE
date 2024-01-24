@@ -2,13 +2,13 @@ https:
   port: "8082"
 sf-accounts-prc-api:
   client-id: ""
-  client_secret: ""
+  client-secret: ""
   host: "dev-sf-accounts-prc-api-96dcaf.5sc6y6-1.usa-e2.cloudhub.io"
   port: "443"
   path: "/api/accounts"
 sf-accounts-sys-api:
-  cliient_id: ""
-  client_secret: ""
+  client-id: ""
+  client-secret: ""
   host: "dev-salesforce-accounts-sys-api-96dcaf.5sc6y6-2.usa-e2.cloudhub.io"
   port: "443"
   path: "/api/accounts"

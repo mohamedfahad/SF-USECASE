@@ -1,0 +1,115 @@
+{
+	"info": {
+		"_postman_id": "d8c7a7b2-6688-41ed-9777-7e92a80dcad4",
+		"name": "salesforce-accounts-prc-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11797284"
+	},
+	"item": [
+		{
+			"name": "Alive",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "73f6374fc2f14b3cb3ad0d18a46dab89",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "AADd3C9cdBa14071BdaF53c277Fd897B",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{cloudhubHost}}/api/alive?checkDependencies=true",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"alive"
+					],
+					"query": [
+						{
+							"key": "checkDependencies",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "73f6374fc2f14b3cb3ad0d18a46dab89",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "AADd3C9cdBa14071BdaF53c277Fd897B",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Testing UpdatedPolicy\",\r\n  \"email\": \"123reqstyq@xyz.com\",\r\n  \"number\": \"125612666\",\r\n  \"phone\": \"9123031134567\",\r\n  \"fax\": \"98123012\",\r\n  \"billingAddress\": {\r\n    \"street\": \"High Street\",\r\n    \"city\": \"Hyderabad\",\r\n    \"state\": \"Telangana\",\r\n    \"postalCode\": \"500089\",\r\n    \"countryIso\": \"KEN\"\r\n  },\r\n  \"shippingAddress\": {\r\n    \"street\": \"Random Street\",\r\n    \"city\": \"Bangalore\",\r\n    \"state\": \"Karnataka\",\r\n    \"postalCode\": \"600089\",\r\n    \"countryIso\": \"IND\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{cloudhubHost}}/api/accounts",
+					"host": [
+						"{{cloudhubHost}}"
+					],
+					"path": [
+						"api",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "https://localhost:8082",
+			"type": "string"
+		},
+		{
+			"key": "cloudhubHost",
+			"value": "https://dev-sf-accounts-prc-api-96dcaf.5sc6y6-1.usa-e2.cloudhub.io",
+			"type": "string"
+		}
+	]
+}
